@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pré-cadastro — LogicDev</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+
+  body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    padding:24px;
+  }
+
+  .cartao-cadastro{
+    width:100%;
+    max-width:480px;
+  }
+
+  .logo-topo{
+    display:flex;
+    justify-content:center;
+    margin-bottom:18px;
+  }
+
+  .logo-topo img{
+    height:48px;
+  }
+
+  .campo{
+    margin-bottom:16px;
+  }
+
+  .campo label{
+    display:block;
+    font-size:.85rem;
+    font-weight:600;
+    margin-bottom:6px;
+  }
+
+  .campo input[type=text],
+  .campo input[type=email]{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--linha, #ddd);
+    border-radius:8px;
+    font-size:.95rem;
+    box-sizing:border-box;
+  }
+
+  .aceite-termos{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    margin:20px 0;
+    font-size:.85rem;
+    color:var(--tinta-suave, #666);
+  }
+
+  .aceite-termos input[type=checkbox]{
+    margin-top:3px;
+    width:18px;
+    height:18px;
+    flex-shrink:0;
+  }
+
+  #btn-enviar-cadastro:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+  }
+
+  .mensagem-sucesso{
+    display:none;
+    text-align:center;
+    padding:12px 4px;
+  }
+
+  .mensagem-sucesso .icone-ok{
+    font-size:2.4rem;
+    margin-bottom:10px;
+  }
+
+  .mensagem-sucesso h2{
+    margin:0 0 10px;
+  }
+
+  .mensagem-sucesso p{
+    color:var(--tinta-suave, #666);
+    font-size:.92rem;
+    line-height:1.5;
+  }
+
+</style>
+</head>
+<body>
+
+  <div class="cartao-cadastro">
+
+    <div class="cartao">
+
+      <div class="logo-topo">
+        <img src="../assets/imagens/logo-logicdev.jpeg" alt="LogicDev">
+      </div>
+
+
+      <!-- ============================================
+           FORMULÁRIO DE PRÉ-CADASTRO
+           ============================================ -->
+
+      <div id="area-formulario">
+
+        <h2 style="text-align:center; margin-bottom:6px;">
+          Pré-cadastro
+        </h2>
+
+        <p style="text-align:center; color:var(--tinta-suave,#666); font-size:.88rem; margin-bottom:22px;">
+          Preencha seus dados para iniciarmos o atendimento.
+        </p>
+
+
+        <form id="form-precadastro" novalidate>
+
+          <div class="campo">
+            <label for="p-nome">Nome completo / Razão Social</label>
+            <input type="text" id="p-nome" required>
+          </div>
+
+          <div class="campo">
+            <label for="p-doc">CPF ou CNPJ</label>
+            <input type="text" id="p-doc" required>
+          </div>
+
+          <div class="campo">
+            <label for="p-whatsapp">WhatsApp</label>
+            <input type="text" id="p-whatsapp" required>
+          </div>
+
+          <div class="campo">
+            <label for="p-email">E-mail</label>
+            <input type="email" id="p-email" required>
+          </div>
+
+
+          <label class="aceite-termos">
+
+            <input type="checkbox" id="p-aceite">
+
+            <span>
+              Concordo com o envio e armazenamento dos dados
+              informados para fins de atendimento e execução
+              do serviço.
+            </span>
+
+          </label>
+
+
+          <button
+            type="submit"
+            id="btn-enviar-cadastro"
+            class="botao botao-primario botao-bloco"
+            disabled
+          >
+            Enviar Cadastro
+          </button>
+
+        </form>
+
+      </div>
+
+
+      <!-- ============================================
+           MENSAGEM DE SUCESSO
+           ============================================ -->
+
+      <div class="mensagem-sucesso" id="area-sucesso">
+
+        <div class="icone-ok">✅</div>
+
+        <h2>Cadastro enviado com sucesso!</h2>
+
+        <p>
+          Recebemos seus dados.<br>
+          Nossa equipe dará continuidade ao seu atendimento.
+          <br><br>
+          Você receberá as informações de acesso ao
+          acompanhamento do seu projeto após a conclusão
+          do cadastro.
+        </p>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+  <!-- ============================================
+       FIREBASE
+       (mesmos SDKs usados no resto do sistema —
+       ajuste a versão/caminho se no seu projeto
+       for diferente do que está aqui)
+       ============================================ -->
+
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>S
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/db.js"></script>
+
+
+  <script>
+
+    /* ============================================================
+       MÁSCARA CPF/CNPJ
+       ============================================================ */
+
+    const inputDoc =
+      document.getElementById('p-doc');
+
+    inputDoc.setAttribute('maxlength', '18');
+
+    inputDoc.addEventListener('input', function(e){
+
+      let value =
+        e.target.value.replace(/\D/g, '');
+
+      value = value.slice(0, 14);
+
+      if(value.length <= 11){
+
+        value = value
+          .replace(/^(\d{3})(\d)/, '$1.$2')
+          .replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
+          .replace(/\.(\d{3})(\d{1,2})$/, '.$1-$2');
+
+      } else {
+
+        value = value
+          .replace(/^(\d{2})(\d)/, '$1.$2')
+          .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+          .replace(/\.(\d{3})\.(\d{3})(\d)/, '.$1.$2/$3')
+          .replace(/\/(\d{4})(\d{1,2})$/, '/$1-$2');
+
+      }
+
+      e.target.value = value;
+
+    });
+
+
+    /* ============================================================
+       MÁSCARA WHATSAPP
+       ============================================================ */
+
+    const inputWhats =
+      document.getElementById('p-whatsapp');
+
+    inputWhats.setAttribute('maxlength', '16');
+
+    inputWhats.addEventListener('input', function(e){
+
+      let value =
+        e.target.value.replace(/\D/g, '');
+
+      value = value.slice(0, 11);
+
+      if(value.length <= 10){
+
+        value = value
+          .replace(/^(\d{2})(\d)/, '($1) $2')
+          .replace(/(\d{4})(\d{1,4})$/, '$1-$2');
+
+      } else {
+
+        value = value
+          .replace(/^(\d{2})(\d)/, '($1) $2')
+          .replace(/(\d{5})(\d{1,4})$/, '$1-$2');
+
+      }
+
+      e.target.value = value;
+
+    });
+
+
+    /* ============================================================
+       CHECKBOX DE ACEITE → LIBERA O BOTÃO
+       ============================================================ */
+
+    const checkboxAceite =
+      document.getElementById('p-aceite');
+
+    const botaoEnviar =
+      document.getElementById('btn-enviar-cadastro');
+
+    checkboxAceite.addEventListener('change', function(){
+
+      botaoEnviar.disabled =
+        !checkboxAceite.checked;
+
+    });
+
+
+    /* ============================================================
+       ENVIO DO FORMULÁRIO (agora salvando de verdade no Firebase)
+       ============================================================ */
+
+    const formulario =
+      document.getElementById('form-precadastro');
+
+    formulario.addEventListener('submit', async function(e){
+
+      e.preventDefault();
+
+      if(!checkboxAceite.checked){
+        return;
+      }
+
+      const dados = {
+
+        nome:
+          document.getElementById('p-nome').value.trim(),
+
+        doc:
+          document.getElementById('p-doc').value.trim(),
+
+        whatsapp:
+          document.getElementById('p-whatsapp').value.trim(),
+
+        email:
+          document.getElementById('p-email').value.trim()
+
+      };
+
+      if(!dados.nome || !dados.doc || !dados.whatsapp || !dados.email){
+
+        alert('Preencha todos os campos antes de enviar.');
+
+        return;
+
+      }
+
+      botaoEnviar.disabled = true;
+      botaoEnviar.textContent = 'Enviando...';
+
+
+      try{
+
+        await DB.salvarPreCadastro(dados);
+
+
+        document.getElementById('area-formulario').style.display = 'none';
+        document.getElementById('area-sucesso').style.display = 'block';
+
+      }
+
+      catch(erro){
+
+        console.error('Erro ao enviar pré-cadastro:', erro);
+
+        alert('Não foi possível enviar seu cadastro. Tente novamente.');
+
+        botaoEnviar.disabled = false;
+        botaoEnviar.textContent = 'Enviar Cadastro';
+
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>

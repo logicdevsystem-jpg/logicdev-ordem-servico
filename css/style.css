@@ -1,0 +1,540 @@
+/* ============================================================
+   LogicDev SYSTEM — AOS
+   style.css
+   ============================================================ */
+
+:root{
+  --tinta: #1e1b2e;
+  --tinta-suave: #6b6478;
+  --linha: #e5e1ef;
+  --fundo: #f7f5fb;
+  --cartao-fundo: #ffffff;
+  --primaria: #6d28d9;
+  --primaria-escura: #5b21b6;
+  --secundaria: #ede9fe;
+  --sucesso: #16a34a;
+  --sucesso-fundo: #dcfce7;
+  --alerta: #d97706;
+  --alerta-fundo: #fef3c7;
+  --erro: #dc2626;
+  --erro-fundo: #fee2e2;
+  --raio: 10px;
+}
+
+*{ box-sizing: border-box; }
+
+body{
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  background: var(--fundo);
+  color: var(--tinta);
+}
+
+.pagina{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Topo (páginas internas) ---------- */
+.topo{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  background: var(--cartao-fundo);
+  border-bottom: 1px solid var(--linha);
+}
+
+.marca{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.marca img{
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.marca .nome{
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--tinta);
+}
+
+.marca .nome span{
+  color: var(--primaria);
+}
+
+.topo-usuario{
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: .85rem;
+  color: var(--tinta-suave);
+}
+
+.topo-usuario strong{
+  color: var(--tinta);
+}
+
+.sair{
+  color: var(--primaria);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.sair:hover{
+  text-decoration: underline;
+}
+
+/* ---------- Conteúdo / cartões ---------- */
+.conteudo{
+  flex: 1;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+}
+
+.cabecalho-secao{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.cabecalho-secao h2{
+  margin: 0 0 4px;
+  font-size: 1.25rem;
+}
+
+.cabecalho-secao p{
+  margin: 0;
+  font-size: .85rem;
+  color: var(--tinta-suave);
+}
+
+.cartao{
+  background: var(--cartao-fundo);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: 22px;
+  margin-bottom: 20px;
+}
+
+.grade-2{
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 720px){
+  .grade-2{ grid-template-columns: 1fr; }
+  .topo{ flex-direction: column; align-items: flex-start; gap: 10px; }
+  .conteudo{ padding: 20px 14px 50px; }
+}
+
+/* ---------- Formulários ---------- */
+label{
+  display: block;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--tinta);
+  margin: 14px 0 6px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+textarea{
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  font-size: .9rem;
+  font-family: inherit;
+  background: var(--fundo);
+  color: var(--tinta);
+}
+
+input:focus,
+textarea:focus{
+  outline: none;
+  border-color: var(--primaria);
+  background: #fff;
+}
+
+textarea{
+  resize: vertical;
+}
+
+.linha-campos{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 480px){
+  .linha-campos{ grid-template-columns: 1fr; }
+}
+
+.campo-senha{
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.campo-senha input{
+  flex: 1;
+  padding-right: 70px;
+}
+
+.campo-senha button{
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--primaria);
+  font-size: .78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.erro{
+  display: none;
+  margin-top: 14px;
+  padding: 10px 12px;
+  background: var(--erro-fundo);
+  color: var(--erro);
+  border-radius: var(--raio);
+  font-size: .82rem;
+}
+
+/* ---------- Botões ---------- */
+.botao{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 20px;
+  border-radius: var(--raio);
+  border: none;
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background .15s ease, opacity .15s ease;
+}
+
+.botao:disabled{
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.botao-primario{
+  background: var(--primaria);
+  color: #fff;
+}
+
+.botao-primario:hover{
+  background: var(--primaria-escura);
+}
+
+.botao-secundario{
+  background: var(--secundaria);
+  color: var(--primaria-escura);
+}
+
+.botao-secundario:hover{
+  background: #ddd6fe;
+}
+
+.botao-bloco{
+  display: flex;
+  width: 100%;
+}
+
+/* ---------- Tela de login ---------- */
+.login-wrap{
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.login-caixa{
+  width: 100%;
+  max-width: 400px;
+  background: var(--cartao-fundo);
+  border: 1px solid var(--linha);
+  border-radius: 14px;
+  padding: 36px 32px;
+}
+
+.login-caixa h1{
+  font-size: 1.3rem;
+  margin: 22px 0 4px;
+}
+
+.login-caixa .sub{
+  font-size: .85rem;
+  color: var(--tinta-suave);
+  margin: 0;
+}
+
+.login-troca{
+  text-align: center;
+  font-size: .82rem;
+  color: var(--tinta-suave);
+  margin-top: 22px;
+}
+
+.login-troca a{
+  color: var(--primaria);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-troca a:hover{
+  text-decoration: underline;
+}
+
+/* ---------- Lista de clientes ---------- */
+.lista-clientes{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.item-cliente{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .15s ease, background .15s ease;
+}
+
+.item-cliente:hover{
+  border-color: var(--primaria);
+  background: var(--secundaria);
+}
+
+.avatar{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primaria);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: .8rem;
+  flex-shrink: 0;
+}
+
+.info{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.info strong{
+  font-size: .9rem;
+}
+
+.info span{
+  font-size: .78rem;
+  color: var(--tinta-suave);
+}
+
+.barra-mini{
+  width: 90px;
+  display: none;
+}
+
+@media (min-width: 600px){
+  .barra-mini{ display: block; }
+}
+
+.pct{
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--primaria);
+  width: 40px;
+  text-align: right;
+}
+
+.vazio{
+  text-align: center;
+  padding: 30px 10px;
+  color: var(--tinta-suave);
+  font-size: .88rem;
+}
+
+/* ---------- Barra de progresso ---------- */
+.barra{
+  width: 100%;
+  height: 8px;
+  background: var(--linha);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.barra div{
+  height: 100%;
+  background: var(--primaria);
+  border-radius: 999px;
+  transition: width .3s ease;
+}
+
+/* ---------- Checklist de etapas ---------- */
+.checklist{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.etapa{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  font-size: .88rem;
+}
+
+.etapa.concluida{
+  background: var(--sucesso-fundo);
+  border-color: #bbf7d0;
+}
+
+.etapa.concluida label{
+  text-decoration: line-through;
+  color: var(--tinta-suave);
+}
+
+.etapa input[type="checkbox"]{
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primaria);
+  flex-shrink: 0;
+}
+
+.etapa label{
+  margin: 0;
+  font-weight: 500;
+  color: var(--tinta);
+  cursor: pointer;
+}
+
+.etapa .numero{
+  width: 20px;
+  font-weight: 700;
+  color: var(--sucesso);
+}
+
+/* ---------- Selos de status ---------- */
+.selo{
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: .75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.selo-concluido{
+  background: var(--sucesso-fundo);
+  color: var(--sucesso);
+}
+
+.selo-andamento{
+  background: var(--alerta-fundo);
+  color: var(--alerta);
+}
+
+/* ---------- Linha do tempo / histórico ---------- */
+.linha-tempo{
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.evento{
+  border-left: 2px solid var(--primaria);
+  padding-left: 14px;
+}
+
+.evento .data{
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--tinta);
+}
+
+.evento .responsavel{
+  font-size: .76rem;
+  color: var(--tinta-suave);
+  margin-bottom: 4px;
+}
+
+.evento ul{
+  margin: 4px 0 0;
+  padding-left: 18px;
+  font-size: .82rem;
+  color: var(--tinta-suave);
+}
+
+/* ---------- Rodapé ---------- */
+.rodape{
+  text-align: center;
+  padding: 16px;
+  font-size: .75rem;
+  color: var(--tinta-suave);
+  border-top: 1px solid var(--linha);
+  background: var(--cartao-fundo);
+}
+
+/* ---------- Documento de entrega / impressão ---------- */
+.documento{
+  display: block;
+}
+
+@media print{
+  .nao-imprime{
+    display: none !important;
+  }
+  body{
+    background: #fff;
+  }
+}
+/* Adicione isso dentro de .login-caixa no seu style.css,
+   ou troque a regra .login-caixa existente por esta: */
+.login-caixa{
+  width: 100%;
+  max-width: 400px;
+  background: var(--cartao-fundo);
+  border: 1px solid var(--linha);
+  border-radius: 14px;
+  padding: 36px 32px;
+  text-align: center;
+}
+
+.login-caixa .marca{
+  justify-content: center;
+}
+
+.login-caixa form{
+  text-align: left;
+}

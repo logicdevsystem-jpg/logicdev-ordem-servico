@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Acesso do Cliente — LogicDev SYSTEM</title>
+
+  <link
+    rel="stylesheet"
+    href="../css/style.css"
+  >
+
+</head>
+
+
+<body>
+
+<div class="pagina">
+
+
+  <div class="login-wrap">
+
+    <div class="login-caixa">
+
+
+      <div class="marca">
+
+        <img
+          src="../assets/logo-logicdev.jpeg"
+          alt="LogicDev"
+        >
+
+        <span class="nome">
+          LogicDev
+          <span>SYSTEM</span>
+        </span>
+
+      </div>
+
+
+      <h1>
+        Acesso do Cliente
+      </h1>
+
+
+      <form id="form-login-cliente">
+
+
+        <label for="nome">
+          Nome completo
+        </label>
+
+        <input
+          type="text"
+          id="nome"
+          placeholder="Digite seu nome completo"
+          required
+        >
+
+
+        <label for="doc">
+          CPF / CNPJ
+        </label>
+
+        <input
+          type="text"
+          id="doc"
+          placeholder="Digite seu CPF ou CNPJ"
+          required
+        >
+
+
+        <div
+          class="erro"
+          id="msg-erro"
+        >
+          Não encontramos nenhum projeto com esses dados.
+          Confira o nome e o CPF/CNPJ informados.
+        </div>
+
+
+        <button
+          type="submit"
+          class="botao botao-primario botao-bloco"
+          style="margin-top:20px;"
+        >
+          Entrar
+        </button>
+
+
+      </form>
+
+
+    </div>
+
+  </div>
+
+
+  <div class="rodape">
+
+    © 2026 LogicDev SYSTEM -
+    Todos os direitos reservados.
+
+  </div>
+
+
+</div>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+<script src="../js/firebase-config.js"></script>
+
+<script src="../js/db.js"></script>
+
+
+<script>
+
+document
+  .getElementById(
+    'form-login-cliente'
+  )
+  .addEventListener(
+    'submit',
+    async function(e){
+
+      e.preventDefault();
+
+
+      const botao =
+        this.querySelector(
+          'button[type=submit]'
+        );
+
+
+      botao.disabled =
+        true;
+
+
+      botao.textContent =
+        'Entrando...';
+
+
+      const nome =
+        document.getElementById(
+          'nome'
+        ).value.trim();
+
+
+      const doc =
+        document.getElementById(
+          'doc'
+        ).value.trim();
+
+
+      const mensagem =
+        document.getElementById(
+          'msg-erro'
+        );
+
+
+      try{
+
+        const cliente =
+          await DB.buscarClienteParaLogin(
+            nome,
+            doc
+          );
+
+
+        if(cliente){
+
+          sessionStorage.setItem(
+            'CLIENTE_LOGADO_ID',
+            cliente.id
+          );
+
+
+          window.location.href =
+            'dashboard.html';
+
+        }
+
+        else{
+
+          mensagem.textContent =
+            'Não encontramos nenhum projeto com esses dados. Confira o nome e o CPF/CNPJ informados.';
+
+
+          mensagem.style.display =
+            'block';
+
+
+          botao.disabled =
+            false;
+
+
+          botao.textContent =
+            'Entrar';
+
+        }
+
+      }
+
+      catch(erro){
+
+        console.error(
+          erro
+        );
+
+
+        mensagem.textContent =
+          'Erro ao conectar. Tente novamente.';
+
+
+        mensagem.style.display =
+          'block';
+
+
+        botao.disabled =
+          false;
+
+
+        botao.textContent =
+          'Entrar';
+
+      }
+
+    }
+  );
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clientes e Projetos — LogicDev SYSTEM</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<div class="pagina">
+
+  <div class="topo">
+
+    <div class="marca">
+      <img src="../assets/logo-logicdev.jpeg" alt="LogicDev">
+      <span class="nome">
+        LogicDev <span>SYSTEM</span>
+      </span>
+    </div>
+
+    <div class="topo-usuario">
+      <div>
+        <strong id="nome-admin">—</strong>
+        <br>
+        CPF: <span id="cpf-admin">—</span>
+      </div>
+
+      <a href="#" class="sair" id="btn-sair">Sair</a>
+    </div>
+
+  </div>
+
+
+  <div class="conteudo">
+
+    <!-- ================= PRÉ-CADASTROS PENDENTES ================= -->
+
+    <div class="cabecalho-secao">
+
+      <div>
+        <h2>Pré-cadastros pendentes</h2>
+        <p id="total-precadastros">Total: 0</p>
+      </div>
+
+    </div>
+
+
+    <div class="cartao" style="margin-bottom:24px;">
+
+      <div
+        class="lista-clientes"
+        id="lista-precadastros">
+      </div>
+
+    </div>
+
+
+    <!-- ================= CLIENTES E PROJETOS ================= -->
+
+    <div class="cabecalho-secao">
+
+      <div>
+        <h2>Clientes e Projetos</h2>
+        <p id="total-clientes">Total de clientes: 0</p>
+      </div>
+
+      <div style="display:flex; gap:10px;">
+
+        <a href="relatorio.html"
+           class="botao botao-secundario">
+          Relatório
+        </a>
+
+        <button
+          class="botao botao-primario"
+          id="btn-novo-cliente">
+          + Novo Cliente
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="cartao">
+
+      <div
+        class="lista-clientes"
+        id="lista-clientes">
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="rodape">
+    © 2026 LogicDev SYSTEM - Todos os direitos reservados.
+  </div>
+
+</div>
+
+
+<!-- MODAL CLIENTE + PROJETO -->
+
+<div
+  id="modal-novo"
+  style="
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(32,26,51,.45);
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:50;
+  "
+>
+
+  <div
+    class="cartao"
+    style="
+      max-width:600px;
+      width:100%;
+      max-height:90vh;
+      overflow:auto;
+    "
+  >
+
+    <div class="cabecalho-secao">
+      <h2>Novo Cliente e Projeto</h2>
+    </div>
+
+
+    <form id="form-novo-cliente">
+
+      <!-- ================= CLIENTE ================= -->
+
+      <h3 style="margin-bottom:15px;">
+        Dados do Cliente
+      </h3>
+
+      <label for="n-nome">
+        Nome completo / Razão Social
+      </label>
+
+      <input
+        type="text"
+        id="n-nome"
+        placeholder="Digite o nome completo"
+        required
+      >
+
+
+      <div class="linha-campos">
+
+        <div>
+
+          <label for="n-doc">
+            CPF / CNPJ
+          </label>
+
+          <input
+         type="text"
+         id="n-doc"
+         placeholder="Digite CPF ou CNPJ"
+         required
+         maxlength="18"
+>
+
+        </div>
+
+
+        <div>
+
+          <label for="n-whatsapp">
+            WhatsApp
+          </label>
+
+          <input
+            type="text"
+            id="n-whatsapp"
+            placeholder="(00) 00000-0000"
+          >
+
+        </div>
+
+      </div>
+
+
+      <label for="n-email">
+        E-mail
+      </label>
+
+      <input
+        type="email"
+        id="n-email"
+        placeholder="cliente@email.com"
+      >
+
+
+      <!-- ================= PROJETO ================= -->
+
+      <h3 style="margin:25px 0 15px;">
+        Dados do Projeto
+      </h3>
+
+
+      <label for="n-projeto">
+        Nome do projeto
+      </label>
+
+      <input
+        type="text"
+        id="n-projeto"
+        placeholder="Ex: Site Institucional João"
+        required
+      >
+
+
+      <label for="n-tipo">
+        Tipo de projeto
+      </label>
+
+      <input
+        type="text"
+        id="n-tipo"
+        placeholder="Ex: One Page, Site Institucional..."
+        required
+      >
+
+
+      <label for="n-etapas">
+        Estrutura / Etapas do projeto
+      </label>
+
+      <textarea
+        id="n-etapas"
+        rows="7"
+        placeholder="Exemplo:
+Estrutura inicial
+Página Inicial
+Serviços
+Sobre
+Contato
+Responsividade
+Publicação"
+        required
+      ></textarea>
+
+
+      <label for="n-tecnologias">
+        Tecnologias
+      </label>
+
+      <input
+        type="text"
+        id="n-tecnologias"
+        placeholder="HTML, CSS, JavaScript"
+      >
+
+
+      <div class="linha-campos">
+
+        <div>
+
+          <label for="n-dominio">
+            Domínio
+          </label>
+
+          <input
+            type="text"
+            id="n-dominio"
+            placeholder="www.cliente.com.br"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label for="n-hospedagem">
+            Hospedagem
+          </label>
+
+          <input
+            type="text"
+            id="n-hospedagem"
+            placeholder="Nome da hospedagem"
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="linha-campos">
+
+        <div>
+
+          <label for="n-inicio">
+            Data de início
+          </label>
+
+          <input
+            type="date"
+            id="n-inicio"
+            required
+          >
+
+        </div>
+
+
+        <div>
+
+          <label for="n-prazo">
+            Prazo de entrega
+          </label>
+
+          <input
+            type="date"
+            id="n-prazo"
+            required
+          >
+
+        </div>
+
+      </div>
+
+
+      <!-- BOTÕES -->
+
+      <div
+        style="
+          display:flex;
+          gap:10px;
+          margin-top:22px;
+        "
+      >
+
+        <button
+          type="button"
+          class="botao botao-secundario botao-bloco"
+          id="btn-cancelar-novo"
+        >
+          Cancelar
+        </button>
+
+
+        <button
+          type="submit"
+          class="botao botao-primario botao-bloco"
+        >
+          Cadastrar Cliente
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- FIREBASE -->
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+<script src="../js/firebase-config.js"></script>
+
+<script src="../js/db.js"></script>
+
+<script src="../js/admin.js"></script>
+
+
+<script>
+
+  exigirLoginAdmin(function(){
+
+    renderizarPainelAdmin();
+
+    renderizarPreCadastros();
+
+  });
+
+</script>
+
+</body>
+</html>

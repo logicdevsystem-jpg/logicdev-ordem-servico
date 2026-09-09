@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    Acompanhamento do Projeto — LogicDev SYSTEM
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="../css/style.css"
+  >
+
+</head>
+
+
+<body>
+
+<div class="pagina">
+
+
+  <div class="topo nao-imprime">
+
+
+    <div class="marca">
+
+      <img
+        src="../assets/logo-logicdev.jpeg"
+        alt="LogicDev"
+      >
+
+      <span class="nome">
+        LogicDev
+        <span>SYSTEM</span>
+      </span>
+
+    </div>
+
+
+    <div class="topo-usuario">
+
+      <a
+        href="#"
+        class="sair"
+        id="btn-sair"
+      >
+        Sair
+      </a>
+
+    </div>
+
+
+  </div>
+
+
+  <div class="conteudo">
+
+
+    <div
+      id="area-cliente"
+      class="nao-imprime"
+    >
+    </div>
+
+
+    <!-- DOCUMENTO DO CLIENTE -->
+
+    <div
+      class="documento"
+      id="documento-entrega"
+    >
+    </div>
+
+
+  </div>
+
+
+  <div class="rodape nao-imprime">
+
+    © 2026 LogicDev SYSTEM -
+    Todos os direitos reservados.
+
+  </div>
+
+
+</div>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+<script src="../js/firebase-config.js"></script>
+
+<script src="../js/db.js"></script>
+
+<script src="../js/cliente.js"></script>
+
+
+<script>
+
+  exigirLoginCliente(
+    renderizarPainelCliente
+  );
+
+</script>
+
+
+</body>
+
+</html>
