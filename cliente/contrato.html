@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Contrato — LogicDev SYSTEM</title>
+
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+
+    #documento-contrato p{
+      font-size:.85rem;
+      line-height:1.6;
+      color:var(--tinta);
+      margin:0 0 10px;
+    }
+
+    #documento-contrato h3{
+      font-size:.95rem;
+      margin:18px 0 8px;
+    }
+
+    @media print{
+      .nao-imprime{ display:none !important; }
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+<div class="pagina">
+
+  <div class="topo nao-imprime">
+    <div class="marca">
+      <img src="../assets/logo-logicdev.jpeg" alt="LogicDev">
+      <span class="nome">LogicDev <span>SYSTEM</span></span>
+    </div>
+  </div>
+
+
+  <div class="conteudo" style="max-width:760px;">
+
+    <div id="area-contrato">
+      <div class="cartao"><p>Carregando contrato...</p></div>
+    </div>
+
+  </div>
+
+
+  <div class="rodape nao-imprime">
+    © 2026 LogicDev SYSTEM - Todos os direitos reservados.
+  </div>
+
+</div>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+<script src="../js/firebase-config.js"></script>
+<script src="../js/db.js"></script>
+<script src="../js/contrato.js"></script>
+
+<script>
+  renderizarContrato();
+</script>
+
+</body>
+</html>

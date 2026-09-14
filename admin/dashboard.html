@@ -233,6 +233,43 @@
       >
 
 
+      <label for="n-modelo-etapas">
+        Modelo de etapas (opcional)
+      </label>
+
+      <div style="display:flex; gap:10px; align-items:center;">
+
+        <select
+          id="n-modelo-etapas"
+          style="
+            flex:1;
+            padding:11px 13px;
+            border:1px solid var(--linha);
+            border-radius:var(--raio);
+            font-size:.9rem;
+            background:var(--fundo);
+            color:var(--tinta);
+          "
+        >
+          <option value="">Selecione um modelo...</option>
+          <option value="institucional">Site Institucional</option>
+          <option value="landing">Landing Page</option>
+          <option value="onepage">One Page</option>
+          <option value="catalogo">Site Catálogo</option>
+          <option value="ecommerce">E-commerce / Loja Virtual</option>
+        </select>
+
+        <button
+          type="button"
+          class="botao botao-secundario"
+          id="btn-preencher-modelo"
+        >
+          Preencher Etapas
+        </button>
+
+      </div>
+
+
       <label for="n-etapas">
         Estrutura / Etapas do projeto
       </label>
