@@ -341,7 +341,7 @@
 
       if(!dados.nome || !dados.doc || !dados.whatsapp || !dados.email){
 
-        alert('Preencha todos os campos antes de enviar.');
+        DB.mostrarAviso('Não foi possível enviar seu cadastro. Código do erro: ' + (erro.code || erro.message || 'desconhecido'));
 
         return;
 
