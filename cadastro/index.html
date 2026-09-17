@@ -341,7 +341,7 @@
 
       if(!dados.nome || !dados.doc || !dados.whatsapp || !dados.email){
 
-        DB.mostrarAviso('Não foi possível enviar seu cadastro. Código do erro: ' + (erro.code || erro.message || 'desconhecido'));
+        alert('Preencha todos os campos antes de enviar.');
 
         return;
 
@@ -365,7 +365,7 @@
 
         console.error('Erro ao enviar pré-cadastro:', erro);
 
-        alert('Não foi possível enviar seu cadastro. Tente novamente.');
+        alert('Não foi possível enviar seu cadastro. Código do erro: ' + (erro.code || erro.message || 'desconhecido'));
 
         botaoEnviar.disabled = false;
         botaoEnviar.textContent = 'Enviar Cadastro';
