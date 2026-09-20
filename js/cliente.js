@@ -126,6 +126,15 @@ async function renderizarPainelCliente(){
         >
           🔄 Atualizar
         </button>
+        ${cliente.valorTotal ? `
+          <a
+            href="contrato.html?id=${cliente.id}"
+            class="botao botao-secundario nao-imprime"
+            style="margin-top:8px; font-size:.78rem; padding:8px 14px; margin-left:6px;"
+          >
+            📄 Ver/Assinar Contrato
+          </a>
+        ` : ''}
         <p style="font-size:.7rem; color:var(--tinta-suave); margin:4px 0 0;">
           Toque para ver as atualizações mais recentes
         </p>

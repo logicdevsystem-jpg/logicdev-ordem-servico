@@ -317,10 +317,14 @@ async function renderizarPainelAdmin(){
               <button
                 type="button"
                 class="botao botao-secundario"
-                style="font-size:.72rem; padding:6px 10px; width:100%; margin-top:8px;"
+                style="font-size:.72rem; padding:6px 10px; width:100%; margin-top:8px; gap:6px;"
                 onclick="event.preventDefault(); event.stopPropagation(); enviarMensagemConclusaoDashboard('${c.id}')"
               >
-                🔔 Projeto 100% — Enviar mensagem de conclusão
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                Projeto 100% — Enviar mensagem de conclusão
               </button>
             ` : ''}
 
@@ -872,11 +876,7 @@ async function renderizarFichaCliente(){
           Salvar Dados Financeiros
         </button>
 
-        <button type="button" class="botao botao-secundario" id="btn-gerar-link">
-          Gerar Link da Proposta
-        </button>
-
-        <button type="button" class="botao botao-primario" id="btn-enviar-whatsapp" style="display:none;">
+        <button type="button" class="botao botao-primario" id="btn-enviar-whatsapp">
           Enviar por WhatsApp
         </button>
 
@@ -897,17 +897,6 @@ async function renderizarFichaCliente(){
             Enviar Mensagem de Conclusão (100%)
           </button>
         ` : ''}
-
-      </div>
-
-      <div id="fin-link-gerado" style="margin-top:14px; display:none;">
-
-        <label style="margin-top:0;">Link da proposta</label>
-
-        <div style="display:flex; gap:8px;">
-          <input type="text" id="fin-link-input" readonly style="flex:1;">
-          <button type="button" class="botao botao-secundario" id="btn-copiar-link">Copiar</button>
-        </div>
 
       </div>
 
@@ -938,7 +927,7 @@ async function renderizarFichaCliente(){
         </div>
 
         <a
-          href="../cliente/contrato.html?id=${cliente.id}"
+          href="../cliente/contrato.html?id=${cliente.id}&from=admin"
           target="_blank"
           class="botao botao-secundario"
         >
@@ -1098,11 +1087,11 @@ function configurarFinanceiro(cliente){
     });
 
 
-  document.getElementById('btn-gerar-link')
+  document.getElementById('btn-enviar-whatsapp')
     .addEventListener('click', async function(){
 
       this.disabled = true;
-      this.textContent = 'Gerando...';
+      this.textContent = 'Preparando...';
 
       try{
 
@@ -1114,16 +1103,6 @@ function configurarFinanceiro(cliente){
           escopo: document.getElementById('fin-escopo').value.trim()
 
         });
-
-        const link =
-          `${window.location.origin}${window.location.pathname.replace('admin/cliente.html','cliente/proposta.html')}?id=${cliente.id}`;
-
-        const area = document.getElementById('fin-link-gerado');
-        const campo = document.getElementById('fin-link-input');
-
-        campo.value = link;
-        area.style.display = 'block';
-
 
         const { sinal } =
           DB.calcularSinalESaldo(inputTotal.value, inputPercentual.value);
@@ -1139,50 +1118,25 @@ function configurarFinanceiro(cliente){
           `para liberarmos o acompanhamento do seu projeto.\n\n` +
           `Qualquer dúvida, estamos à disposição!\nLogicDev System`;
 
-        const btnWhats = document.getElementById('btn-enviar-whatsapp');
-
-        btnWhats.style.display = 'inline-flex';
-
-        btnWhats.onclick = function(){
-          window.open(DB.linkWhatsApp(cliente.whatsapp, mensagem), '_blank');
-        };
+        window.open(DB.linkWhatsApp(cliente.whatsapp, mensagem), '_blank');
 
       }
 
       catch(erro){
 
-        console.error('Erro ao gerar link:', erro);
-        DB.mostrarAviso('Não foi possível gerar o link. Veja o console.');
+        console.error('Erro ao preparar mensagem:', erro);
+        DB.mostrarAviso('Não foi possível preparar a mensagem. Veja o console.');
 
       }
 
       finally{
 
         this.disabled = false;
-        this.textContent = 'Gerar Link da Proposta';
+        this.textContent = 'Enviar por WhatsApp';
 
       }
 
     });
-
-
-  const btnCopiar = document.getElementById('btn-copiar-link');
-
-  if(btnCopiar){
-
-    btnCopiar.addEventListener('click', function(){
-
-      const campo = document.getElementById('fin-link-input');
-
-      campo.select();
-
-      navigator.clipboard.writeText(campo.value)
-        .then(() => { DB.mostrarAviso('Link copiado!'); })
-        .catch(() => { DB.mostrarAviso('Não foi possível copiar automaticamente. Copie manualmente.'); });
-
-    });
-
-  }
 
 
   const btnConfirmarSinal = document.getElementById('btn-confirmar-sinal');

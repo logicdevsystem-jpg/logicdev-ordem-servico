@@ -30,6 +30,7 @@ async function renderizarContrato(){
 
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
+  const veioDoAdmin = params.get('from') === 'admin';
 
   const area = document.getElementById('area-contrato');
 
@@ -37,6 +38,8 @@ async function renderizarContrato(){
     area.innerHTML = '<div class="cartao"><p>Link inválido.</p></div>';
     return;
   }
+
+  try{
 
   if(!AUTH.currentUser){
     await AUTH.signInAnonymously();
@@ -50,6 +53,36 @@ async function renderizarContrato(){
   }
 
   const jaAssinado = !!cliente.assinaturaContrato;
+
+  /*
+    Quem decide se mostra o painel de admin (quadro de
+    assinatura da prestadora) é a URL (&from=admin), não a
+    sessão do Firebase — a sessão pode "escorregar" pra
+    anônima se você testar como cliente na mesma aba, então
+    não é confiável pra essa decisão. A segurança de verdade
+    continua sendo a Regra do Firestore: mesmo que alguém
+    force ?from=admin na URL, só quem estiver realmente
+    logado como admin consegue SALVAR a assinatura — a regra
+    do configuracoes barra qualquer outro.
+  */
+
+  const souAdmin = veioDoAdmin;
+
+
+  /*
+    Ajusta o link "Voltar" conforme quem está vendo —
+    admin volta pro dashboard do admin, cliente pro dele.
+  */
+
+  const linkVoltar = document.getElementById('link-voltar');
+
+  if(linkVoltar){
+    linkVoltar.href = veioDoAdmin ? '../admin/dashboard.html' : 'dashboard.html';
+  }
+
+
+  const assinaturaPrestadora =
+    await DB.buscarAssinaturaPrestadora();
 
   const { sinal, saldo } =
     DB.calcularSinalESaldo(cliente.valorTotal, cliente.percentualEntrada);
@@ -136,10 +169,124 @@ async function renderizarContrato(){
         Documento gerado eletronicamente em ${hoje}.
       </p>
 
+      <h3>ASSINATURAS</h3>
+
+      <div class="linha-campos">
+
+        <div style="text-align:center;">
+
+          ${assinaturaPrestadora ? `
+            <img
+              src="${assinaturaPrestadora}"
+              alt="Assinatura da prestadora"
+              style="max-width:220px; max-height:110px; margin-bottom:6px;"
+            >
+          ` : `
+            <p style="font-size:.8rem; color:var(--tinta-suave); padding:30px 0;">
+              (aguardando assinatura)
+            </p>
+          `}
+
+          <p style="border-top:1px solid var(--linha); padding-top:6px; font-size:.8rem;">
+            <strong>${DADOS_PRESTADORA.nome}</strong><br>
+            PRESTADORA
+          </p>
+
+        </div>
+
+        <div style="text-align:center;">
+
+          ${jaAssinado ? `
+            <img
+              src="${cliente.assinaturaContrato}"
+              alt="Assinatura do cliente"
+              style="max-width:220px; max-height:110px; margin-bottom:6px;"
+            >
+          ` : `
+            <p style="font-size:.8rem; color:var(--tinta-suave); padding:30px 0;">
+              (aguardando assinatura)
+            </p>
+          `}
+
+          <p style="border-top:1px solid var(--linha); padding-top:6px; font-size:.8rem;">
+            <strong>${cliente.nome}</strong><br>
+            CONTRATANTE
+          </p>
+
+        </div>
+
+      </div>
+
     </div>
 
 
-    ${jaAssinado ? `
+    ${souAdmin ? `
+
+      <!-- ================= PAINEL DO ADMIN ================= -->
+
+      <div class="cartao">
+
+        <h2 style="font-size:1rem;">Sua assinatura (Prestadora)</h2>
+
+        <p style="font-size:.85rem; color:var(--tinta-suave);">
+          ${assinaturaPrestadora
+            ? 'Já existe uma assinatura salva. Assine de novo abaixo se quiser substituí-la.'
+            : 'Assine uma vez aqui — essa assinatura passa a valer para todos os contratos automaticamente.'}
+        </p>
+
+        <canvas
+          id="canvas-assinatura-prestadora"
+          width="600"
+          height="220"
+          style="
+            border:1px solid var(--linha);
+            border-radius:8px;
+            width:100%;
+            max-width:600px;
+            touch-action:none;
+            background:#fff;
+            display:block;
+          "
+        ></canvas>
+
+        <div style="display:flex; gap:10px; margin-top:12px;">
+
+          <button type="button" class="botao botao-secundario" id="btn-limpar-assinatura-prestadora">
+            Limpar
+          </button>
+
+          <button type="button" class="botao botao-primario" id="btn-salvar-assinatura-prestadora">
+            ${assinaturaPrestadora ? 'Atualizar Assinatura' : 'Salvar Assinatura'}
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="cartao" style="text-align:center;">
+
+        ${jaAssinado ? `
+          <span class="selo selo-concluido">Assinado</span>
+          <h2 style="margin-top:10px;">Contrato assinado pelo cliente</h2>
+          <p style="color:var(--tinta-suave); font-size:.88rem;">
+            Em ${DB.formatarData(cliente.dataAssinaturaContrato)}
+          </p>
+          <button class="botao botao-secundario nao-imprime" onclick="window.print()">
+            Imprimir / Salvar PDF
+          </button>
+        ` : `
+          <span class="selo selo-andamento">Pendente</span>
+          <h2 style="margin-top:10px;">Aguardando assinatura do cliente</h2>
+          <p style="color:var(--tinta-suave); font-size:.88rem;">
+            Esse é um preview — a assinatura do cliente só pode ser feita por ele,
+            pelo link enviado.
+          </p>
+        `}
+
+      </div>
+
+    ` : jaAssinado ? `
 
       <div class="cartao" style="text-align:center;">
 
@@ -148,14 +295,6 @@ async function renderizarContrato(){
         <p style="color:var(--tinta-suave); font-size:.88rem;">
           Assinado digitalmente em ${DB.formatarData(cliente.dataAssinaturaContrato)}
         </p>
-
-        <img
-          src="${cliente.assinaturaContrato}"
-          alt="Assinatura do cliente"
-          style="max-width:280px; border:1px solid var(--linha); border-radius:8px; margin:10px 0;"
-        >
-
-        <br>
 
         <button class="botao botao-secundario nao-imprime" onclick="window.print()">
           Imprimir / Salvar PDF
@@ -167,7 +306,7 @@ async function renderizarContrato(){
 
       <div class="cartao">
 
-        <h2 style="font-size:1rem;">Assinatura digital</h2>
+        <h2 style="font-size:1rem;">Assinatura digital — parte do CONTRATANTE</h2>
 
         <p style="font-size:.85rem; color:var(--tinta-suave);">
           Assine com o dedo (celular/tablet) ou com o mouse, no quadro abaixo.
@@ -207,8 +346,29 @@ async function renderizarContrato(){
   `;
 
 
-  if(!jaAssinado){
+  if(souAdmin){
+    configurarAssinaturaPrestadora();
+  }
+
+  else if(!jaAssinado){
     configurarAssinatura(cliente.id);
+  }
+
+  }
+
+  catch(erro){
+
+    console.error('Erro ao carregar contrato:', erro);
+
+    area.innerHTML = `
+      <div class="cartao">
+        <p><strong>Não foi possível carregar o contrato.</strong></p>
+        <p style="font-size:.85rem; color:var(--tinta-suave);">
+          Código do erro: ${erro.code || erro.message || 'desconhecido'}
+        </p>
+      </div>
+    `;
+
   }
 
 }
@@ -321,6 +481,119 @@ function configurarAssinatura(clienteId){
 
         this.disabled = false;
         this.textContent = 'Confirmar Assinatura';
+
+      }
+
+    });
+
+}
+
+
+/* ============================================================
+   QUADRO DE ASSINATURA — PRESTADORA (admin)
+   ============================================================ */
+
+function configurarAssinaturaPrestadora(){
+
+  const canvas = document.getElementById('canvas-assinatura-prestadora');
+  const ctx = canvas.getContext('2d');
+
+  let desenhando = false;
+
+  ctx.strokeStyle = '#1e1b2e';
+  ctx.lineWidth = 2.2;
+  ctx.lineCap = 'round';
+
+
+  function posicao(e){
+
+    const rect = canvas.getBoundingClientRect();
+
+    const escalaX = canvas.width / rect.width;
+    const escalaY = canvas.height / rect.height;
+
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    return {
+      x: (clientX - rect.left) * escalaX,
+      y: (clientY - rect.top) * escalaY
+    };
+
+  }
+
+
+  function iniciar(e){
+    desenhando = true;
+    const p = posicao(e);
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+  }
+
+  function desenhar(e){
+
+    if(!desenhando){ return; }
+
+    e.preventDefault();
+
+    const p = posicao(e);
+
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+
+  }
+
+  function parar(){
+    desenhando = false;
+  }
+
+
+  canvas.addEventListener('mousedown', iniciar);
+  canvas.addEventListener('mousemove', desenhar);
+  canvas.addEventListener('mouseup', parar);
+  canvas.addEventListener('mouseleave', parar);
+
+  canvas.addEventListener('touchstart', iniciar);
+  canvas.addEventListener('touchmove', desenhar);
+  canvas.addEventListener('touchend', parar);
+
+
+  document.getElementById('btn-limpar-assinatura-prestadora')
+    .addEventListener('click', function(){
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+
+
+  document.getElementById('btn-salvar-assinatura-prestadora')
+    .addEventListener('click', async function(){
+
+      if(canvasVazio(canvas)){
+        DB.mostrarAviso('Desenhe sua assinatura no quadro antes de salvar.');
+        return;
+      }
+
+      this.disabled = true;
+      this.textContent = 'Salvando...';
+
+      try{
+
+        const imagemBase64 = canvas.toDataURL('image/png');
+
+        await DB.salvarAssinaturaPrestadora(imagemBase64);
+
+        DB.mostrarAviso('Assinatura da prestadora salva. Vale para todos os contratos.');
+
+        await renderizarContrato();
+
+      }
+
+      catch(erro){
+
+        console.error('Erro ao salvar assinatura da prestadora:', erro);
+        DB.mostrarAviso('Não foi possível salvar. Veja o console.');
+
+        this.disabled = false;
+        this.textContent = 'Salvar Assinatura';
 
       }
 

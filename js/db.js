@@ -541,6 +541,37 @@ const DB = {
 
 
   /* ==========================================================
+     ASSINATURA DA PRESTADORA (fixa, salva uma vez, usada
+     em todos os contratos)
+     ========================================================== */
+
+  async salvarAssinaturaPrestadora(imagemBase64){
+
+    await FIRESTORE
+      .collection('configuracoes')
+      .doc('prestadora')
+      .set({
+        assinatura: imagemBase64,
+        atualizadoEm: DB.hojeISO()
+      }, { merge: true });
+
+  },
+
+
+  async buscarAssinaturaPrestadora(){
+
+    const doc =
+      await FIRESTORE
+        .collection('configuracoes')
+        .doc('prestadora')
+        .get();
+
+    return doc.exists ? (doc.data().assinatura || null) : null;
+
+  },
+
+
+  /* ==========================================================
      AVISO PERSONALIZADO (substitui o alert() do navegador)
      ========================================================== */
 
