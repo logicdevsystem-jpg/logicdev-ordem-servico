@@ -68,6 +68,18 @@ async function renderizarContrato(){
 
   const souAdmin = veioDoAdmin;
 
+  /*
+    Isso aqui é a checagem de segurança real: mesmo vindo do
+    link do admin (?from=admin), só libera o quadro de assinar
+    se a sessão do Firebase realmente estiver logada como
+    admin nesse exato momento. Se não estiver (sessão caiu
+    pra anônima, ou nunca foi feito login), mostra um aviso
+    claro em vez de um quadro que ia falhar ao salvar.
+  */
+
+  const sessaoAdminValida =
+    veioDoAdmin && AUTH.currentUser && !AUTH.currentUser.isAnonymous;
+
 
   /*
     Ajusta o link "Voltar" conforme quem está vendo —
@@ -224,6 +236,28 @@ async function renderizarContrato(){
 
       <!-- ================= PAINEL DO ADMIN ================= -->
 
+      ${!sessaoAdminValida ? `
+
+        <div class="cartao" style="text-align:center;">
+
+          <span class="selo selo-andamento">Sessão expirada</span>
+
+          <h2 style="margin-top:10px;">Faça login de novo como administrador</h2>
+
+          <p style="color:var(--tinta-suave); font-size:.88rem;">
+            Sua sessão de admin não está mais ativa nesse navegador
+            (geralmente porque a tela de cliente foi acessada nessa mesma
+            aba). Faça login de novo para poder assinar como Prestadora.
+          </p>
+
+          <a href="../admin/index.html" class="botao botao-primario" style="margin-top:10px;">
+            Ir para o login do admin
+          </a>
+
+        </div>
+
+      ` : `
+
       <div class="cartao">
 
         <h2 style="font-size:1rem;">Sua assinatura (Prestadora)</h2>
@@ -262,6 +296,8 @@ async function renderizarContrato(){
         </div>
 
       </div>
+
+      `}
 
 
       <div class="cartao" style="text-align:center;">
@@ -572,6 +608,23 @@ function configurarAssinaturaPrestadora(){
         return;
       }
 
+      /*
+        Confere a sessão de novo, na hora do clique — pode ter
+        mudado desde que a página carregou (ex: testou a tela
+        de cliente em outra aba nesse meio tempo).
+      */
+
+      if(!AUTH.currentUser || AUTH.currentUser.isAnonymous){
+
+        DB.mostrarAviso(
+          'Sua sessão de admin caiu. Feche essa aba, faça login de novo em ' +
+          '../admin/index.html e abra o contrato novamente pelo botão "Ver Contrato".'
+        );
+
+        return;
+
+      }
+
       this.disabled = true;
       this.textContent = 'Salvando...';
 
@@ -590,7 +643,11 @@ function configurarAssinaturaPrestadora(){
       catch(erro){
 
         console.error('Erro ao salvar assinatura da prestadora:', erro);
-        DB.mostrarAviso('Não foi possível salvar. Veja o console.');
+
+        DB.mostrarAviso(
+          'Não foi possível salvar. Código do erro: ' +
+          (erro.code || erro.message || 'desconhecido')
+        );
 
         this.disabled = false;
         this.textContent = 'Salvar Assinatura';

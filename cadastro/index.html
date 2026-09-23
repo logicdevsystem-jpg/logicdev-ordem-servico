@@ -6,26 +6,90 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Contrato — LogicDev SYSTEM</title>
+  <title>Pré-cadastro — LogicDev SYSTEM</title>
+
+  <link rel="icon" href="../assets/logo-logicdev.jpeg" type="image/jpeg">
 
   <link rel="stylesheet" href="../css/style.css">
 
   <style>
 
-    #documento-contrato p{
-      font-size:.85rem;
+    .termos{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      margin:18px 0 0;
+      font-size:.82rem;
+      color:var(--tinta-suave);
+    }
+
+    .termos input[type="checkbox"]{
+      width:18px;
+      height:18px;
+      margin-top:2px;
+      accent-color:var(--primaria);
+      flex-shrink:0;
+      cursor:pointer;
+    }
+
+    .aviso-info{
+      display:none;
+      margin-top:14px;
+      padding:10px 12px;
+      background:var(--alerta-fundo);
+      color:var(--alerta);
+      border-radius:var(--raio);
+      font-size:.82rem;
+      line-height:1.5;
+    }
+
+    /* ---------- Tela de sucesso ---------- */
+    .tela-sucesso{
+      display:none;
+      text-align:center;
+    }
+
+    .icone-sucesso{
+      width:72px;
+      height:72px;
+      margin:6px auto 18px;
+      border-radius:50%;
+      background:var(--secundaria);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .icone-sucesso svg{
+      width:38px;
+      height:38px;
+      stroke:var(--primaria);
+      fill:none;
+      stroke-width:2.4;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .tela-sucesso h1{
+      margin:0 0 6px;
+    }
+
+    .tela-sucesso p{
+      font-size:.88rem;
+      color:var(--tinta-suave);
       line-height:1.6;
-      color:var(--tinta);
-      margin:0 0 10px;
+      margin:0 0 14px;
+      text-align:left;
     }
 
-    #documento-contrato h3{
-      font-size:.95rem;
-      margin:18px 0 8px;
-    }
-
-    @media print{
-      .nao-imprime{ display:none !important; }
+    .tela-sucesso .destaque{
+      background:var(--secundaria);
+      border-radius:var(--raio);
+      padding:14px 16px;
+      text-align:left;
+      font-size:.85rem;
+      color:var(--primaria-escura);
+      line-height:1.6;
     }
 
   </style>
@@ -37,25 +101,83 @@
 
 <div class="pagina">
 
-  <div class="topo nao-imprime">
-    <div class="marca">
-      <img src="../assets/logo-logicdev.jpeg" alt="LogicDev">
-      <span class="nome">LogicDev <span>SYSTEM</span></span>
+  <div class="login-wrap">
+
+    <div class="login-caixa">
+
+      <div class="marca">
+        <img src="../assets/logo-logicdev.jpeg" alt="LogicDev">
+        <span class="nome">LogicDev <span>SYSTEM</span></span>
+      </div>
+
+
+      <!-- ===================== TELA DO FORMULÁRIO ===================== -->
+      <div id="tela-formulario">
+
+        <h1>Pré-cadastro</h1>
+        <p class="sub">Preencha seus dados para iniciarmos o atendimento.</p>
+
+        <form id="form-precadastro">
+
+          <label for="nome">Nome completo / Razão Social</label>
+          <input type="text" id="nome" placeholder="Digite seu nome ou razão social" required>
+
+          <label for="doc">CPF ou CNPJ</label>
+          <input type="text" id="doc" placeholder="Digite seu CPF ou CNPJ" inputmode="numeric" maxlength="18" required>
+
+          <label for="whatsapp">WhatsApp</label>
+          <input type="text" id="whatsapp" placeholder="(00) 00000-0000" inputmode="numeric" maxlength="15" required>
+
+          <label for="email">E-mail</label>
+          <input type="text" id="email" placeholder="Digite seu e-mail" required>
+
+          <label class="termos" for="termos">
+            <input type="checkbox" id="termos">
+            Concordo com o envio e armazenamento dos dados informados para fins de atendimento e execução do serviço.
+          </label>
+
+          <div class="erro" id="msg-erro">
+            Não foi possível enviar seu cadastro. Verifique os dados e tente novamente.
+          </div>
+
+          <div class="aviso-info" id="msg-duplicado">
+            Esses dados já constam em nosso sistema. Se você acredita que alguma informação foi cadastrada errada no pré-cadastro, entre em contato com o administrador.
+          </div>
+
+          <button type="submit" id="botao-enviar" class="botao botao-primario botao-bloco" style="margin-top:20px;" disabled>
+            Enviar Cadastro
+          </button>
+
+        </form>
+
+      </div>
+
+
+      <!-- ===================== TELA DE SUCESSO ===================== -->
+      <div id="tela-sucesso" class="tela-sucesso">
+
+        <div class="icone-sucesso">
+          <svg viewBox="0 0 24 24">
+            <path d="M20 6L9 17l-5-5"></path>
+          </svg>
+        </div>
+
+        <h1>Cadastro realizado com sucesso!</h1>
+
+        <p>Recebemos os seus dados e nossa equipe já vai analisá-los.</p>
+
+        <div class="destaque">
+          Aguarde a confirmação do seu pré-cadastro. Em breve enviaremos, por WhatsApp ou e-mail, o link de acompanhamento da sua Ordem de Serviço, onde você poderá consultar o andamento do seu projeto.
+        </div>
+
+      </div>
+
+
     </div>
-    <a href="dashboard.html" class="sair" id="link-voltar">← Voltar</a>
+
   </div>
 
-
-  <div class="conteudo" style="max-width:760px;">
-
-    <div id="area-contrato">
-      <div class="cartao"><p>Carregando contrato...</p></div>
-    </div>
-
-  </div>
-
-
-  <div class="rodape nao-imprime">
+  <div class="rodape">
     © 2026 LogicDev SYSTEM - Todos os direitos reservados.
   </div>
 
@@ -68,10 +190,121 @@
 
 <script src="../js/firebase-config.js"></script>
 <script src="../js/db.js"></script>
-<script src="../js/contrato.js"></script>
 
 <script>
-  renderizarContrato();
+
+/* ---------- Máscara CPF / CNPJ ---------- */
+function mascararCpfCnpj(valor){
+
+  let v = valor.replace(/\D/g, '').slice(0, 14);
+
+  if(v.length <= 11){
+
+    v = v.replace(/(\d{3})(\d)/, '$1.$2');
+    v = v.replace(/(\d{3})(\d)/, '$1.$2');
+    v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+
+  } else {
+
+    v = v.replace(/^(\d{2})(\d)/, '$1.$2');
+    v = v.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+    v = v.replace(/\.(\d{3})(\d)/, '.$1/$2');
+    v = v.replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+
+  }
+
+  return v;
+
+}
+
+
+/* ---------- Máscara WhatsApp / Telefone ---------- */
+function mascararTelefone(valor){
+
+  let v = valor.replace(/\D/g, '').slice(0, 11);
+
+  v = v.replace(/^(\d{2})(\d)/, '($1) $2');
+  v = v.replace(/(\d)(\d{4})$/, '$1-$2');
+
+  return v;
+
+}
+
+
+const campoDoc = document.getElementById('doc');
+const campoWhats = document.getElementById('whatsapp');
+const checkboxTermos = document.getElementById('termos');
+const botaoEnviar = document.getElementById('botao-enviar');
+
+
+campoDoc.addEventListener('input', function(){
+  this.value = mascararCpfCnpj(this.value);
+});
+
+campoWhats.addEventListener('input', function(){
+  this.value = mascararTelefone(this.value);
+});
+
+
+/* ---------- Botão só libera com o termo marcado ---------- */
+checkboxTermos.addEventListener('change', function(){
+  botaoEnviar.disabled = !this.checked;
+});
+
+
+/* ---------- Envio do formulário ---------- */
+document.getElementById('form-precadastro').addEventListener('submit', async function(e){
+
+  e.preventDefault();
+
+  const msgErro = document.getElementById('msg-erro');
+  const msgDuplicado = document.getElementById('msg-duplicado');
+
+  msgErro.style.display = 'none';
+  msgDuplicado.style.display = 'none';
+
+  botaoEnviar.disabled = true;
+  botaoEnviar.textContent = 'Enviando...';
+
+  const nome = document.getElementById('nome').value.trim();
+  const doc = document.getElementById('doc').value.trim();
+  const whatsapp = document.getElementById('whatsapp').value.trim();
+  const email = document.getElementById('email').value.trim();
+
+  try{
+
+    const jaExiste = await DB.cpfJaCadastrado(doc);
+
+    if(jaExiste){
+
+      msgDuplicado.style.display = 'block';
+
+      botaoEnviar.disabled = !checkboxTermos.checked;
+      botaoEnviar.textContent = 'Enviar Cadastro';
+
+      return;
+
+    }
+
+    await DB.salvarPreCadastro({ nome, doc, whatsapp, email });
+
+    document.getElementById('tela-formulario').style.display = 'none';
+    document.getElementById('tela-sucesso').style.display = 'block';
+
+  }
+  catch(erro){
+
+    console.error(erro);
+
+    msgErro.style.display = 'block';
+
+    botaoEnviar.disabled = !checkboxTermos.checked;
+    botaoEnviar.textContent = 'Enviar Cadastro';
+
+  }
+
+});
+
 </script>
 
 </body>

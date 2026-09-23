@@ -384,6 +384,39 @@ const DB = {
      PRÉ-CADASTRO (formulário público)
      ========================================================== */
 
+  async cpfJaCadastrado(cpfCnpj){
+
+    if(!AUTH.currentUser){
+      await AUTH.signInAnonymously();
+    }
+
+    const cpfBusca = DB.soNumeros(cpfCnpj);
+
+    if(!cpfBusca){
+      return false;
+    }
+
+    const [snapClientes, snapPreCadastros] = await Promise.all([
+
+      FIRESTORE
+        .collection('clientes')
+        .where('cpfBusca', '==', cpfBusca)
+        .limit(1)
+        .get(),
+
+      FIRESTORE
+        .collection('precadastros')
+        .where('cpfBusca', '==', cpfBusca)
+        .limit(1)
+        .get()
+
+    ]);
+
+    return !snapClientes.empty || !snapPreCadastros.empty;
+
+  },
+
+
   async salvarPreCadastro(dados){
 
     if(!AUTH.currentUser){
